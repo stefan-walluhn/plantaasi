@@ -2,16 +2,26 @@ import time
 import urequests as requests
 
 
+class Metrics:
+    def __init__(self, metrics):
+        self.metrics = metrics
+
+    def __call__(self):
+        for metric in self.metrics:
+            yield metric()
+
+
 class Metric:
     TIME_OFFSET = 946684800
 
-    def __init__(self, name, interval=60):
+    def __init__(self, name, value_callback, interval=60):
         self.name = name
+        self.value_callback = value_callback
         self.interval = interval
 
-    def __call__(self, value):
+    def __call__(self):
         return dict(name=self.name,
-                    value=value,
+                    value=self.value_callback(),
                     interval=self.interval,
                     time=time.time() + Metric.TIME_OFFSET)
 
