@@ -2,15 +2,6 @@ import time
 import urequests as requests
 
 
-class Metrics:
-    def __init__(self, metrics):
-        self.metrics = metrics
-
-    def __call__(self):
-        for metric in self.metrics:
-            yield metric()
-
-
 class Metric:
     TIME_OFFSET = 946684800
 
