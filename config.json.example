@@ -1,0 +1,25 @@
+{
+    "grafana": {
+        "metrics_url": "$GRAFANA_METRICS_ENDPOINT",
+        "user": "$GRAFANA_API_KEY",
+        "api_key": "$GRAFANA_API_SECRET"
+    },
+    "wifi": {
+        "essid": "$WIFI_ESSID",
+        "password": "$WIFI_PASSWORD"
+    },
+    "sensors": [
+        {
+            "pin": 34,
+            "raw_hight": $RAW_HIGH,
+            "raw_low": $RAW_LOW,
+            "metric": "$METRIC_NAME"
+        }, {
+            "pin": 35,
+            "raw_hight": $RAW_HIGH,
+            "raw_low": $RAW_LOW,
+            "metric": "$METRIC_NAME"
+        }
+    ]
+}
+
