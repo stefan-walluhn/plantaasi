@@ -3,7 +3,7 @@ import time
 from machine import Pin, Timer, WDT
 
 from plantaasi.grafana import Grafana, Metric
-from plantaasi.moisture_sensor import MoistureSensor
+from plantaasi.sensor.moisture import MoistureSensor
 
 from config import config
 

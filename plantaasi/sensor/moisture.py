@@ -17,7 +17,7 @@ class MoistureSensor:
         self.adc.atten(ADC.ATTN_11DB)
         self.adc.width(ADC.WIDTH_10BIT)
 
-    def read_raw_u16(self):
+    def _read_raw_u16(self):
         raw = 0
         for _ in range(MoistureSensor.READ_CYCLE):
             raw += self.adc.read_u16()
@@ -25,6 +25,6 @@ class MoistureSensor:
         return raw // MoistureSensor.READ_CYCLE
 
     def read(self):
-        perc = (self.m * self.read_raw_u16() + self.n) / MoistureSensor.MAX_REF
+        perc = (self.m * self._read_raw_u16() + self.n) / MoistureSensor.MAX_REF
 
         return int(perc * 100)

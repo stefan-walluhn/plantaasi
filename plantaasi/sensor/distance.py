@@ -14,11 +14,11 @@ class SR04T:
         time.sleep_us(10)
         self.trigger_pin.off()
 
-    def _read_raw(self):
+    def _read_raw_us(self):
         self._trigger()
 
         return time_pulse_us(self.echo_pin, 1)
 
     def read(self):
         # raw / 1000000 * sonic speed / 2
-        return self._read_raw() * SR04T.SONIC_SPEED / 2000000
+        return self._read_raw_us() * SR04T.SONIC_SPEED / 2000000
