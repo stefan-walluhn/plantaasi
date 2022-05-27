@@ -29,7 +29,9 @@ edit the configuration for your environment
 ### Transfer plantaasi to the microcontroller
 
 `./venv/bin/ampy --port /dev/ttyUSB0 put plantaasi`
+
 `./venv/bin/ampy --port /dev/ttyUSB0 put main.py`
+
 `./venv/bin/ampy --port /dev/ttyUSB0 put config.json`
 
 
@@ -53,4 +55,4 @@ if not wlan.isconnected():
 
 install urequests library
 `import upip`
-`upip.install urequests`
+`upip.install('urequests')`
