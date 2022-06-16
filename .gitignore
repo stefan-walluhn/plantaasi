@@ -1,4 +1,6 @@
-config.json
-
-pyvenv.cfg
+# python environment
 venv/
+pyvenv.cfg
+
+# plantassi configuration
+config.json

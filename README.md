@@ -1,6 +1,13 @@
 ## create a development environment
 
-### create environment for flashing
+### create environment for flashing (via make)
+#### via make 
+
+```
+make install
+```
+
+#### manually
 
 create python virtual environment
 ```
@@ -43,15 +50,23 @@ cp config.json.example config.json
 ```
 
 edit the configuration for your environment
+### Transfer plantaasi to the microcontroller 
+#### via make
 
-### Transfer plantaasi to the microcontroller
+
+default interface `/dev/ttyUSB0`
+
+```
+make [INTERFACE=/dev/ttyUSB0] upload
+```
+
+#### manual
 
 ```
 ./venv/bin/ampy --port /dev/ttyUSB0 put plantaasi
 ./venv/bin/ampy --port /dev/ttyUSB0 put main.py
 ./venv/bin/ampy --port /dev/ttyUSB0 put config.json
 ```
-
 
 ### install required library on esp32
 
