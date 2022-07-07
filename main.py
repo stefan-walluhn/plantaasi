@@ -1,33 +1,10 @@
-import time
+from machine import Pin, Timer
 
-from machine import Pin, Timer, WDT
-
+from plantaasi.bootstrap import init_wifi, init_time
 from plantaasi.grafana import Grafana, Metric
 from plantaasi.sensor.moisture import MoistureSensor
 
 from config import config
-
-
-def init_wifi(essid, password):
-    import network
-
-    wlan = network.WLAN(network.STA_IF)
-    wlan.active(True)
-    if not wlan.isconnected():
-        wlan.connect(essid, password)
-
-        while not wlan.isconnected():
-            time.sleep(1)
-
-
-def init_time():
-    import ntptime
-    while True:
-        try:
-            ntptime.settime()
-            return
-        except OSError:
-            time.sleep(1)
 
 
 def build_metrics(sensors_config):
