@@ -26,4 +26,3 @@ class Grafana:
         response = requests.post(self.metrics_url,
                                  headers=self.headers, json=metrics)
         response.close()
-

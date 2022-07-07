@@ -1,5 +1,5 @@
 import time
-from machine import Pin, time_pulse_us
+from machine import time_pulse_us
 
 
 class SR04T:
