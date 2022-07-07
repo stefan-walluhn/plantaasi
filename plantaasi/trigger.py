@@ -21,7 +21,7 @@ class PushoverTrigger(Trigger):
     def __init__(self, user, token, message="gießen!"):
         _data = {'user': user, 'token': token, 'message': message}
 
-        self.data = '&'.join([f'{k}={v}' for k, v in _data.items()])
+        self.data = '&'.join(['='.join(i) for i in _data.items()])
 
     def __call__(self):
         response = requests.post(PushoverTrigger.PUSHOVER_URL, data=self.data)
