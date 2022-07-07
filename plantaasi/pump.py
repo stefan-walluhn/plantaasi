@@ -2,11 +2,10 @@ import time
 
 
 class Pump:
-    def __init__(self, pin, duration):
+    def __init__(self, pin):
         self.pin = pin
-        self.duration = duration
 
-    def trigger(self):
+    def trigger(self, duration):
         self.pin.on()
-        time.sleep(self.duration)
+        time.sleep(duration)
         self.pin.off()
