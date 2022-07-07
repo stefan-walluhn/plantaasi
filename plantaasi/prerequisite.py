@@ -24,7 +24,7 @@ class Prerequisites(Prerequisite):
 
 
 class MoisturePrerequisite(Prerequisite):
-    def __init__(self, sensor, threshold):
+    def __init__(self, sensor, threshold=30):
         self.sensor = sensor
         self.threshold = threshold
 
