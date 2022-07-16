@@ -1,8 +1,8 @@
 class Watering:
-    def __init__(self, prerequisites, trigger):
-        self.prerequisites = prerequisites
+    def __init__(self, prerequisite, trigger):
+        self.prerequisite = prerequisite
         self.trigger = trigger
 
     def run(self):
-        if self.prerequisites.fulfilled():
+        if self.prerequisite.fulfilled():
             self.trigger()
