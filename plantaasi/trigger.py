@@ -6,6 +6,15 @@ class Trigger:
         raise NotImplementedError('trigger must be callable!')
 
 
+class Triggers(Trigger):
+    def __init__(self, *triggers):
+        self.triggers = triggers
+
+    def __call__(self):
+        for trigger in self.triggers:
+            trigger()
+
+
 class PumpTrigger(Trigger):
     def __init__(self, pump, duration):
         self.pump = pump
