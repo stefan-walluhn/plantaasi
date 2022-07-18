@@ -1,5 +1,9 @@
+import logging
 import time
 import urequests as requests
+
+
+log = logging.getLogger(__name__)
 
 
 class Metric:
@@ -10,6 +14,8 @@ class Metric:
         self.interval = interval
 
     def __call__(self, value):
+        log.debug("format metric '%s' using value %0.4f", self.name, value)
+
         return dict(name=self.name,
                     value=value,
                     interval=self.interval,
@@ -30,6 +36,7 @@ class Grafana(object):
         self.headers = {"Authorization": f"Bearer {instance_id}:{api_key}"}
 
     def push(self, metrics):
+        log.debug("pushing grafana metrics")
         response = requests.post(self.metrics_url,
                                  headers=self.headers, json=metrics)
         response.close()

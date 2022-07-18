@@ -1,9 +1,18 @@
+import logging
 import time
 
 
+log = logging.getLogger(__name__)
+
+
 class Prerequisite:
-    def fulfilled(self):
+    def _fulfilled(self):
         raise NotImplementedError
+
+    def fulfilled(self):
+        ff = self._fulfilled()
+        log.debug("%s %s fulfilled", self, "is" if ff else "is not")
+        return ff
 
 
 class Prerequisites(Prerequisite):
@@ -14,13 +23,9 @@ class Prerequisites(Prerequisite):
         for prerequisite in self.prerequisites:
             yield prerequisite.fulfilled()
 
-    def fulfilled(self):
-        return False not in self._each_fulfilled()
-
-        # Note to self: if we must cycle ALL fulfilled checks, we have to use
-        # `list` to drain the generator! Otherwise this will return on first
-        # hit:
-        # return False not in list(self._each_fulfilled())
+    def _fulfilled(self):
+        # use list() to drain generator and trigger all side effects
+        return False not in list(self._each_fulfilled())
 
 
 class MoisturePrerequisite(Prerequisite):
@@ -28,10 +33,10 @@ class MoisturePrerequisite(Prerequisite):
         self.sensor = sensor
         self.threshold = threshold
 
-    def fulfilled(self):
+    def _fulfilled(self):
         return self.threshold < self.sensor.read()
 
 
 class TimePrerequisite(Prerequisite):
-    def fulfilled(self):
+    def _fulfilled(self):
         return time.localtime()[3] not in range(6, 20)

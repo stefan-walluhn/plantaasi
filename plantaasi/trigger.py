@@ -1,4 +1,8 @@
+import logging
 import urequests as requests
+
+
+log = logging.getLogger(__name__)
 
 
 class Trigger:
@@ -21,6 +25,7 @@ class PumpTrigger(Trigger):
         self.duration = duration
 
     def __call__(self):
+        log.info("trigger %s for %d", self.pump, self.duration)
         self.pump.trigger(self.duration)
 
 

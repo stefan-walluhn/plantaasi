@@ -1,3 +1,4 @@
+import logging
 import time
 
 from machine import Pin
@@ -13,6 +14,9 @@ from plantaasi.trigger import Triggers, PumpTrigger
 from plantaasi.watering import Watering
 
 
+log = logging.getLogger(__name__)
+
+
 class MoisturePrerequisiteBuilder:
     def __call__(self, pin, raw_hight, raw_low, threshold, metric=None):
         sensor = MoistureSensor(Pin(pin), raw_hight, raw_low)
@@ -20,16 +24,23 @@ class MoisturePrerequisiteBuilder:
             grafana_metric = GrafanaMetric(Grafana(), Metric(metric))
             sensor = SideEffectSensor(sensor, grafana_metric.push_metric)
 
+        log.debug("create MoisturePrerequisite using '%s' on pin %d",
+                  sensor.__class__.__name__, pin)
+
         return MoisturePrerequisite(sensor, threshold=threshold)
 
 
 class TimePrerequisiteBuilder:
     def __call__(self):
+        log.debug("create TimePrerequisite")
+
         return TimePrerequisite()
 
 
 class PumpTriggerBuilder:
     def __call__(self, pin, duration):
+        log.debug("create PumpTriggerBuilder on pin %d", pin)
+
         return PumpTrigger(
             Pump(Pin(pin, mode=Pin.OPEN_DRAIN, value=0)), duration
         )
@@ -42,6 +53,8 @@ class WateringBuilder:
                          'pump': PumpTriggerBuilder()}
 
     def get_wattering(self, watering_config):
+        log.debug("create watering")
+
         return Watering(
             Prerequisites(
                 *self._build_members(watering_config['prerequisites'])
@@ -55,6 +68,8 @@ class WateringBuilder:
 
 
 def init_wifi(essid, password):
+    log.info("init wifi")
+
     import network
 
     wlan = network.WLAN(network.STA_IF)
@@ -67,7 +82,10 @@ def init_wifi(essid, password):
 
 
 def init_time():
+    log.info("init time")
+
     import ntptime
+
     while True:
         try:
             ntptime.settime()
@@ -77,10 +95,14 @@ def init_time():
 
 
 def init_grafana(metrics_url, instance_id, api_key):
+    log.info("init Grafana")
+
     Grafana().login(metrics_url, instance_id, api_key)
 
 
 def init_waterings(waterings_config):
+    log.info("init waterings")
+
     watering_builder = WateringBuilder()
 
     for watering_config in waterings_config:
