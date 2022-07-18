@@ -2,21 +2,25 @@ import time
 
 from machine import Pin
 
+from plantaasi.grafana import Grafana, Metric
 from plantaasi.prerequisite import (Prerequisites,
                                     MoisturePrerequisite,
                                     TimePrerequisite)
 from plantaasi.pump import Pump
-from plantaasi.sensor import MoistureSensor
+from plantaasi.sensor import MoistureSensor, SideEffectSensor
+from plantaasi.side_effect import GrafanaMetric
 from plantaasi.trigger import Triggers, PumpTrigger
 from plantaasi.watering import Watering
 
 
 class MoisturePrerequisiteBuilder:
-    def __call__(self, pin, raw_hight, raw_low, threshold):
-        return MoisturePrerequisite(
-            MoistureSensor(Pin(pin), raw_hight, raw_low),
-            threshold=threshold
-        )
+    def __call__(self, pin, raw_hight, raw_low, threshold, metric=None):
+        sensor = MoistureSensor(Pin(pin), raw_hight, raw_low)
+        if metric:
+            grafana_metric = GrafanaMetric(Grafana(), Metric(metric))
+            sensor = SideEffectSensor(sensor, grafana_metric.push_metric)
+
+        return MoisturePrerequisite(sensor, threshold=threshold)
 
 
 class TimePrerequisiteBuilder:
@@ -70,6 +74,10 @@ def init_time():
             return
         except OSError:
             time.sleep(1)
+
+
+def init_grafana(metrics_url, instance_id, api_key):
+    Grafana().login(metrics_url, instance_id, api_key)
 
 
 def init_waterings(waterings_config):

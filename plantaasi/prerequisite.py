@@ -18,7 +18,7 @@ class Prerequisites(Prerequisite):
         return False not in self._each_fulfilled()
 
         # Note to self: if we must cycle ALL fulfilled checks, we have to use
-        # `list` to empty the generator! Otherwise this will return on first
+        # `list` to drain the generator! Otherwise this will return on first
         # hit:
         # return False not in list(self._each_fulfilled())
 
