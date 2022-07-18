@@ -34,7 +34,7 @@ class MoisturePrerequisite(Prerequisite):
         self.threshold = threshold
 
     def _fulfilled(self):
-        return self.threshold < self.sensor.read()
+        return self.threshold > self.sensor.read()
 
 
 class TimePrerequisite(Prerequisite):
