@@ -36,7 +36,7 @@ class Grafana(object):
         self.headers = {"Authorization": f"Bearer {instance_id}:{api_key}"}
 
     def push(self, metrics):
-        log.debug("pushing grafana metrics")
+        log.info("pushing grafana metrics")
         response = requests.post(self.metrics_url,
                                  headers=self.headers, json=metrics)
         response.close()

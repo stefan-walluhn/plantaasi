@@ -39,7 +39,7 @@ class TimePrerequisiteBuilder:
 
 class PumpTriggerBuilder:
     def __call__(self, pin, duration):
-        log.debug("create PumpTriggerBuilder on pin %d", pin)
+        log.debug("create PumpTrigger on pin %d", pin)
 
         return PumpTrigger(
             Pump(Pin(pin, mode=Pin.OPEN_DRAIN, value=0)), duration
@@ -65,6 +65,10 @@ class WateringBuilder:
     def _build_members(self, config):
         for k, v in config.items():
             yield self._builder[k](**v)
+
+
+def init_logging(loglevel):
+    logging.basicConfig(level=getattr(logging, loglevel))
 
 
 def init_wifi(essid, password):
