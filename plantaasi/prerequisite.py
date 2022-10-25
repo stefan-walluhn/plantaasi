@@ -39,4 +39,4 @@ class MoisturePrerequisite(Prerequisite):
 
 class TimePrerequisite(Prerequisite):
     def _fulfilled(self):
-        return time.localtime()[3] not in range(6, 20)
+        return time.localtime()[3] not in range(5, 19)

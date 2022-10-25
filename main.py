@@ -1,20 +1,14 @@
 from machine import Timer
 
-from plantaasi.config import config
-from plantaasi.bootstrap import (init_logging,
-                                 init_wifi,
-                                 init_time,
-                                 init_grafana,
-                                 init_waterings)
+from plantaasi.bootstrap.config import config
+from plantaasi.bootstrap.setup import Setup
 
 
 def run():
-    init_logging(config.get('loglevel', 'INFO'))
-    init_wifi(**config['wifi'])
-    init_time()
-    init_grafana(**config['grafana'])
+    setup = Setup(config)
+    setup()
 
-    waterings = list(init_waterings(config['waterings']))
+    waterings = setup.waterings
 
     Timer(0).init(
         period=60000,

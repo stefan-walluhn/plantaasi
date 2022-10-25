@@ -25,7 +25,7 @@ class PumpTrigger(Trigger):
         self.duration = duration
 
     def __call__(self):
-        log.info("trigger %s for %d", self.pump, self.duration)
+        log.info("trigger %s for %d seconds", self.pump, self.duration)
         self.pump.trigger(self.duration)
 
 
