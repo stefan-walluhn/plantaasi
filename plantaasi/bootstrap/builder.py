@@ -58,5 +58,7 @@ class WateringBuilder:
     def __call__(self, prerequisites, triggers):
         log.debug("create watering")
 
-        return Watering(Prerequisites(*self._build_members(prerequisites)),
-                        Triggers(*self._build_members(triggers)))
+        return Watering(
+            Prerequisites(*self._build_members(prerequisites)),
+            Triggers(*self._build_members(triggers))
+        )

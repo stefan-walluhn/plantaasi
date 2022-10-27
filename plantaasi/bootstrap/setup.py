@@ -1,8 +1,9 @@
 import logging
 import time
 
-from plantaasi.grafana import Grafana
 from plantaasi.bootstrap.builder import WateringBuilder
+from plantaasi.grafana import Grafana
+from plantaasi.utils import connect_wifi
 
 
 log = logging.getLogger(__name__)
@@ -29,16 +30,8 @@ class Setup:
     def setup_wifi(self):
         log.info("setup wifi")
 
-        import network
-
-        wlan = network.WLAN(network.STA_IF)
-        wlan.active(True)
-        if not wlan.isconnected():
-            wlan.connect(self.config['wifi']['essid'],
-                         self.config['wifi']['password'])
-
-            while not wlan.isconnected():
-                time.sleep(1)
+        connect_wifi(self.config['wifi']['essid'],
+                     self.config['wifi']['password'])
 
     def setup_time(self):
         log.info("setup time")
