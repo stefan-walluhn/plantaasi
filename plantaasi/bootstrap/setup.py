@@ -1,12 +1,14 @@
 import logging
 import time
 
+from usyslog import SyslogHandler
+
 from plantaasi.bootstrap.builder import WateringBuilder
 from plantaasi.grafana import Grafana
 from plantaasi.utils import connect_wifi
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger()
 
 
 class Setup:
@@ -23,9 +25,16 @@ class Setup:
         return self._waterings
 
     def setup_logging(self):
-        logging.basicConfig(
-            level=getattr(logging, self.config.get('loglevel', 'INFO'))
-        )
+        if 'logging' not in self.config:
+            return
+
+        if 'loglevel' in self.config['logging']:
+            logging.basicConfig(
+                level=getattr(logging, self.config['logging']['loglevel'])
+            )
+
+        if 'syslog' in self.config['logging']:
+            log.addHandler(SyslogHandler(**self.config['logging']['syslog']))
 
     def setup_wifi(self):
         log.info("setup wifi")

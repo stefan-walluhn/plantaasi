@@ -2,7 +2,7 @@ import logging
 import urequests as requests
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger()
 
 
 class Trigger:

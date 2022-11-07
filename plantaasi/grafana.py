@@ -3,7 +3,7 @@ import time
 import urequests as requests
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger()
 
 
 class Metric:

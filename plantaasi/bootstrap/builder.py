@@ -13,12 +13,12 @@ from plantaasi.trigger import Triggers, PumpTrigger
 from plantaasi.watering import Watering
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger()
 
 
 class MoisturePrerequisiteBuilder:
-    def __call__(self, pin, raw_hight, raw_low, threshold, metric=None):
-        sensor = MoistureSensor(Pin(pin), raw_hight, raw_low)
+    def __call__(self, pin, uv_high, uv_low, threshold, metric=None):
+        sensor = MoistureSensor(Pin(pin), uv_high, uv_low)
         if metric:
             grafana_metric = GrafanaMetric(Grafana(), Metric(metric))
             sensor = SideEffectSensor(sensor, grafana_metric.push_metric)
