@@ -41,7 +41,7 @@ class Plant:
             )
 
         if 'syslog' in self.config['logging']:
-            log.warning("Switching to remote syslog handler")
+            log.warning("switching to remote syslog handler")
             log.addHandler(SyslogHandler(**self.config['logging']['syslog']))
 
     def _setup_time(self):

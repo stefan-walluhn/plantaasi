@@ -46,7 +46,7 @@ class Grafana(object):
             ).close()
         except OSError as e:
             if e.errno == 116:
-                log.error("timout while pushing grafana metrics")
+                log.error("timeout while pushing grafana metrics")
                 return
 
             raise
