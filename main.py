@@ -1,14 +1,14 @@
 import machine
 
 from plantaasi.bootstrap.config import config
-from plantaasi.bootstrap.setup import Setup
+from plantaasi.bootstrap.plant import Plant
 
 
 def run():
-    setup = Setup(config)
-    setup()
+    plant = Plant(config)
+    plant.setup()
 
-    for watering in setup.waterings:
+    for watering in plant.waterings:
         watering.run()
 
     machine.deepsleep(60000)

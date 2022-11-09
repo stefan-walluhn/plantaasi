@@ -1,17 +1,20 @@
+import esp32
 import logging
+import ntptime
 import time
 
-from usyslog import SyslogHandler
+from lib.usyslog import SyslogHandler
+from machine import Pin
 
 from plantaasi.bootstrap.builder import WateringBuilder
 from plantaasi.grafana import Grafana
 from plantaasi.utils import connect_wifi
 
 
-log = logging.getLogger()
+log = logging.getLogger(__name__)
 
 
-class Setup:
+class Plant:
     watering_builder = WateringBuilder()
 
     def __init__(self, config):
@@ -24,14 +27,12 @@ class Setup:
 
         return self._waterings
 
-    def setup_debugging(self):
-        import esp32
-        from machine import Pin
+    def _setup_debugging(self):
 
         debug_pin = Pin(12, Pin.IN, Pin.PULL_UP)
         esp32.wake_on_ext0(debug_pin, esp32.WAKEUP_ALL_LOW)
 
-    def setup_logging(self):
+    def _setup_logging(self):
         if 'logging' not in self.config:
             return
 
@@ -43,16 +44,14 @@ class Setup:
         if 'syslog' in self.config['logging']:
             log.addHandler(SyslogHandler(**self.config['logging']['syslog']))
 
-    def setup_wifi(self):
+    def _setup_wifi(self):
         log.info("setup wifi")
 
         connect_wifi(self.config['wifi']['essid'],
                      self.config['wifi']['password'])
 
-    def setup_time(self):
+    def _setup_time(self):
         log.info("setup time")
-
-        import ntptime
 
         while True:
             try:
@@ -61,21 +60,21 @@ class Setup:
             except OSError:
                 time.sleep(1)
 
-    def setup_grafana(self):
+    def _setup_grafana(self):
         log.info("setup Grafana")
 
         Grafana().login(**self.config['grafana'])
 
-    def setup_waterings(self):
+    def _setup_waterings(self):
         log.info("setup waterings")
 
         for watering_config in self.config['waterings']:
             yield self.watering_builder(**watering_config)
 
-    def __call__(self):
-        self.setup_debugging()
-        self.setup_logging()
-        self.setup_wifi()
-        self.setup_time()
-        self.setup_grafana()
+    def setup(self):
+        self._setup_debugging()
+        self._setup_logging()
+        self._setup_wifi()
+        self._setup_time()
+        self._setup_grafana()
         self._waterings = list(self.setup_waterings())
