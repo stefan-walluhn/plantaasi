@@ -6,6 +6,8 @@ from plantaasi.bootstrap.plant import Plant
 
 
 def run():
+    machine.WDT(timeout=50000)
+
     plant = Plant(config)
     plant.setup()
 
