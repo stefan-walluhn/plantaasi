@@ -1,9 +1,9 @@
+import lib.urequests as requests
 import logging
 import time
-import urequests as requests
 
 
-log = logging.getLogger()
+log = logging.getLogger(__name__)
 
 
 class Metric:
@@ -37,6 +37,16 @@ class Grafana(object):
 
     def push(self, metrics):
         log.info("pushing grafana metrics")
-        response = requests.post(self.metrics_url,
-                                 headers=self.headers, json=metrics)
-        response.close()
+        try:
+            response = requests.post(self.metrics_url,
+                                     headers=self.headers,
+                                     json=metrics,
+                                     timeout=20)
+            response.close()
+        except OSError as e:
+            if e.errno == 116:
+                log.error("timout while pushing grafana metrics")
+                return
+
+            raise
+
