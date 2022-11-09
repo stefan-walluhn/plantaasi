@@ -1,4 +1,4 @@
-from machine import Timer
+import machine
 
 from plantaasi.bootstrap.config import config
 from plantaasi.bootstrap.setup import Setup
@@ -8,14 +8,12 @@ def run():
     setup = Setup(config)
     setup()
 
-    waterings = setup.waterings
+    for watering in setup.waterings:
+        watering.run()
 
-    Timer(0).init(
-        period=60000,
-        mode=Timer.PERIODIC,
-        callback=lambda t: [watering.run() for watering in waterings]
-    )
+    machine.deepsleep(60000)
 
 
 if __name__ == '__main__':
-    run()
+    if machine.wake_reason() is not machine.EXT0_WAKE:
+        run()
