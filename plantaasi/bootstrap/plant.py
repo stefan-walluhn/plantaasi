@@ -1,10 +1,8 @@
-import esp32
 import logging
 import ntptime
 import time
 
 from lib.usyslog import SyslogHandler
-from machine import Pin
 
 from plantaasi.bootstrap.builder import WateringBuilder
 from plantaasi.grafana import Grafana
@@ -27,10 +25,11 @@ class Plant:
 
         return self._waterings
 
-    def _setup_debugging(self):
+    def _setup_wifi(self):
+        log.info("setup wifi")
 
-        debug_pin = Pin(12, Pin.IN, Pin.PULL_UP)
-        esp32.wake_on_ext0(debug_pin, esp32.WAKEUP_ALL_LOW)
+        connect_wifi(self.config['wifi']['essid'],
+                     self.config['wifi']['password'])
 
     def _setup_logging(self):
         if 'logging' not in self.config:
@@ -42,13 +41,8 @@ class Plant:
             )
 
         if 'syslog' in self.config['logging']:
+            log.warning("Switching to remote syslog handler")
             log.addHandler(SyslogHandler(**self.config['logging']['syslog']))
-
-    def _setup_wifi(self):
-        log.info("setup wifi")
-
-        connect_wifi(self.config['wifi']['essid'],
-                     self.config['wifi']['password'])
 
     def _setup_time(self):
         log.info("setup time")
@@ -72,9 +66,9 @@ class Plant:
             yield self.watering_builder(**watering_config)
 
     def setup(self):
-        self._setup_debugging()
-        self._setup_logging()
+        log.info("starting plant setup")
         self._setup_wifi()
+        self._setup_logging()
         self._setup_time()
         self._setup_grafana()
-        self._waterings = list(self.setup_waterings())
+        self._waterings = list(self._setup_waterings())

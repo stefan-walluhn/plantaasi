@@ -49,4 +49,3 @@ class Grafana(object):
                 return
 
             raise
-
