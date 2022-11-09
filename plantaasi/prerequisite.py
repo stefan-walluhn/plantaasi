@@ -19,13 +19,8 @@ class Prerequisites(Prerequisite):
     def __init__(self, *prerequisites):
         self.prerequisites = prerequisites
 
-    def _each_fulfilled(self):
-        for prerequisite in self.prerequisites:
-            yield prerequisite.fulfilled()
-
     def _fulfilled(self):
-        # use list() to drain generator and trigger all side effects
-        return False not in list(self._each_fulfilled())
+        return False not in [p.fulfilled() for p in self.prerequisites]
 
 
 class MoisturePrerequisite(Prerequisite):
