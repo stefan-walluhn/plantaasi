@@ -38,11 +38,12 @@ class Grafana(object):
     def push(self, metrics):
         log.info("pushing grafana metrics")
         try:
-            response = requests.post(self.metrics_url,
-                                     headers=self.headers,
-                                     json=metrics,
-                                     timeout=20)
-            response.close()
+            requests.post(
+                self.metrics_url,
+                headers=self.headers,
+                json=metrics,
+                timeout=20
+            ).close()
         except OSError as e:
             if e.errno == 116:
                 log.error("timout while pushing grafana metrics")
