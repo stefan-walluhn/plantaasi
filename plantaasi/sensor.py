@@ -23,32 +23,37 @@ class SideEffectSensor(Sensor):
 
 
 class MoistureSensor(Sensor):
-    READ_CYCLE = 8
-    MAX_REF = 32000  # arbitrary; use sensible value to utilize esp32 floats
+    READ_CYCLES = 8
+    MAX_REF = 1048576
 
     def __init__(self, pin, uv_high, uv_low):
         # uv value to percental value mapping is calculated by using a linear
         # function. Instead of processing the whole mapping on every read, we
         # can pre-process the params of the linear function instead
         # (y = mx + n)
-        self.m = MoistureSensor.MAX_REF / (uv_high - uv_low)
-        self.n = (uv_low * MoistureSensor.MAX_REF) / (uv_low - uv_high)
+        self._m = MoistureSensor.MAX_REF / (uv_high - uv_low)
+        self._n = (uv_low * MoistureSensor.MAX_REF) / (uv_low - uv_high)
 
         self.adc = ADC(pin)
         self.adc.atten(ADC.ATTN_11DB)
         self.adc.width(ADC.WIDTH_10BIT)
 
-    def _read_uv(self):
-        uv = 0
-        for _ in range(MoistureSensor.READ_CYCLE):
-            uv += self.adc.read_uv()
+    def _read_uvs(self, cycles):
+        for _ in range(cycles):
+            time.sleep_ms(1)
+            yield self.adc.read_uv()
 
-        return uv // MoistureSensor.READ_CYCLE
+    def _read_uv(self):
+        return (
+            sum(self._read_uvs(MoistureSensor.READ_CYCLES))
+            // MoistureSensor.READ_CYCLES
+        )
 
     def read(self):
-        perc = (self.m * self._read_uv() + self.n) / MoistureSensor.MAX_REF
-
-        return int(perc * 100)
+        return int(
+            (self._m * self._read_uv() + self._n) * 100
+            / MoistureSensor.MAX_REF
+        )
 
 
 class SR04T(Sensor):
