@@ -38,9 +38,9 @@ class MoistureSensor(Sensor):
         self.adc.atten(ADC.ATTN_11DB)
         self.adc.width(ADC.WIDTH_10BIT)
 
-    def _read_uvs(self, cycles):
+    def _read_uvs(self, cycles, delay=10):
         for _ in range(cycles):
-            time.sleep_ms(1)
+            time.sleep_ms(delay)
             yield self.adc.read_uv()
 
     def _read_uv(self):
