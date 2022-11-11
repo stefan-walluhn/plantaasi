@@ -22,7 +22,8 @@ def rescue():
     import webrepl
 
     ap = network.WLAN(network.AP_IF)
-    ap.config(ssid='plantaasi')
+    ap.config(essid='plantaasi', max_clients=3)
+    ap.active(True)
 
     webrepl.start(password='plantaasi', port=8765)
 
