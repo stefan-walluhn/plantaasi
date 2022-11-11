@@ -44,10 +44,8 @@ class MoistureSensor(Sensor):
             yield self.adc.read_uv()
 
     def _read_uv(self):
-        return (
-            sum(self._read_uvs(MoistureSensor.READ_CYCLES))
-            // MoistureSensor.READ_CYCLES
-        )
+        uvs = list(self._read_uvs(MoistureSensor.READ_CYCLES))
+        return sorted(uvs)[len(uvs) // 2]
 
     def read(self):
         return int(
