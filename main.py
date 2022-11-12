@@ -2,17 +2,14 @@ import machine
 import esp32
 
 from plantaasi.bootstrap.config import config
-from plantaasi.bootstrap.plant import Plant
+from plantaasi.bootstrap.setup import setup
 
 
 def run():
     machine.WDT(timeout=50000)
 
-    plant = Plant(config)
-    plant.setup()
-
-    for watering in plant.waterings:
-        watering.run()
+    plant = setup(config)
+    plant.run()
 
     machine.deepsleep(60000)
 

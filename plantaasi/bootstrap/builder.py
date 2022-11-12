@@ -10,13 +10,14 @@ from plantaasi.pump import Pump
 from plantaasi.sensor import MoistureSensor, SideEffectSensor
 from plantaasi.side_effect import GrafanaMetric
 from plantaasi.trigger import Triggers, PumpTrigger
+from plantaasi.utils import Singleton
 from plantaasi.watering import Watering
 
 
 log = logging.getLogger()
 
 
-class MoisturePrerequisiteBuilder:
+class MoisturePrerequisiteBuilder(Singleton):
     def __call__(self, pin, uv_high, uv_low, threshold, metric=None):
         sensor = MoistureSensor(Pin(pin), uv_high, uv_low)
         if metric:
@@ -29,14 +30,14 @@ class MoisturePrerequisiteBuilder:
         return MoisturePrerequisite(sensor, threshold=threshold)
 
 
-class TimePrerequisiteBuilder:
+class TimePrerequisiteBuilder(Singleton):
     def __call__(self):
         log.debug("create TimePrerequisite")
 
         return TimePrerequisite()
 
 
-class PumpTriggerBuilder:
+class PumpTriggerBuilder(Singleton):
     def __call__(self, pin, duration):
         log.debug("create PumpTrigger on pin %d", pin)
 
@@ -46,7 +47,7 @@ class PumpTriggerBuilder:
         )
 
 
-class WateringBuilder:
+class WateringBuilder(Singleton):
     _builders = {'moisture': MoisturePrerequisiteBuilder(),
                  'time': TimePrerequisiteBuilder(),
                  'pump': PumpTriggerBuilder()}

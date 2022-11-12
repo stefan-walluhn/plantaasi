@@ -2,6 +2,8 @@ import lib.urequests as requests
 import logging
 import time
 
+from plantaasi.utils import Singleton
+
 
 log = logging.getLogger(__name__)
 
@@ -22,15 +24,7 @@ class Metric:
                     time=time.time() + Metric.TIME_OFFSET)
 
 
-class Grafana(object):
-    _instance = None
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(Grafana, cls).__new__(cls)
-
-        return cls._instance
-
+class Grafana(Singleton):
     def login(self, metrics_url, instance_id, api_key):
         self.metrics_url = metrics_url
         self.headers = {"Authorization": f"Bearer {instance_id}:{api_key}"}
