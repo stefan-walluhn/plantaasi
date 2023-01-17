@@ -7,10 +7,9 @@ RESCUE_PIN = 12
 
 
 def run():
-    from plantaasi.bootstrap.config import config
-    from plantaasi.bootstrap.setup import setup
+    from plantaasi import bootstrap, config
 
-    plant = setup(config)
+    plant = bootstrap.setup(config.load_config())
     plant.run()
 
 
