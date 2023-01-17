@@ -30,7 +30,7 @@ class Grafana(Singleton):
         self.headers = {"Authorization": f"Bearer {instance_id}:{api_key}"}
 
     def push(self, metrics):
-        log.info("pushing grafana metrics")
+        log.debug("pushing grafana metrics")
         try:
             requests.post(
                 self.metrics_url,
@@ -39,8 +39,5 @@ class Grafana(Singleton):
                 timeout=20
             ).close()
         except OSError as e:
-            if e.errno == 116:
-                log.error("timeout while pushing grafana metrics")
-                return
-
-            raise
+            log.exc(e, "error while pushing grafana metrics")
+            return

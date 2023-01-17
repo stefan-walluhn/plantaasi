@@ -14,7 +14,10 @@ log = logging.getLogger(__name__)
 def setup_wifi(config):
     log.info("setup wifi")
 
-    connect_wifi(config['wifi']['essid'], config['wifi']['password'])
+    try:
+        connect_wifi(config['wifi']['essid'], config['wifi']['password'])
+    except RuntimeError as e:
+        log.error(e.value)
 
 
 def setup_logging(config):
@@ -33,7 +36,11 @@ def setup_logging(config):
 
 def setup_time():
     log.info("setup time")
-    ntpdate()
+
+    try:
+        ntpdate()
+    except RuntimeError as e:
+        log.error(e.value)
 
 
 def setup_grafana(config):

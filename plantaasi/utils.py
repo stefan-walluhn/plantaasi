@@ -19,12 +19,17 @@ def connect_wifi(essid, password):
     if not wlan.isconnected():
         wlan.connect(essid, password)
 
-        while not wlan.isconnected():
-            time.sleep(1)
+        for i in range(5):
+            if wlan.isconnected():
+                return
+            else:
+                time.sleep(i ** 2)
+
+        raise RuntimeError("unable to connect to given wifi")
 
 
 def ntpdate():
-    for i in range(10):
+    for i in range(5):
         try:
             ntptime.settime()
             return

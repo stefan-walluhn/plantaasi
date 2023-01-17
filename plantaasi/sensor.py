@@ -1,7 +1,11 @@
+import logging
 import time
 
 from machine import ADC
 from machine import time_pulse_us
+
+
+log = logging.getLogger(__name__)
 
 
 class Sensor:
@@ -48,10 +52,14 @@ class MoistureSensor(Sensor):
         return sorted(uvs)[len(uvs) // 2]
 
     def read(self):
-        return int(
+        perc = int(
             (self._m * self._read_uv() + self._n) * 100
             / MoistureSensor.MAX_REF
         )
+
+        log.debug("%s read: %i", self, perc)
+
+        return perc
 
 
 class SR04T(Sensor):
