@@ -1,17 +1,17 @@
 import machine
 import esp32
 
-from plantaasi.bootstrap.config import config
-from plantaasi.bootstrap.setup import setup
+
+RUN_EVERY_MINUTES = 10
+RESCUE_PIN = 12
 
 
 def run():
-    machine.WDT(timeout=50000)
+    from plantaasi.bootstrap.config import config
+    from plantaasi.bootstrap.setup import setup
 
     plant = setup(config)
     plant.run()
-
-    machine.deepsleep(60000)
 
 
 def rescue():
@@ -26,10 +26,12 @@ def rescue():
 
 
 if __name__ == '__main__':
-    rescue_pin = machine.Pin(12, machine.Pin.IN, machine.Pin.PULL_UP)
+    rescue_pin = machine.Pin(RESCUE_PIN, machine.Pin.IN, machine.Pin.PULL_UP)
     esp32.wake_on_ext0(rescue_pin, esp32.WAKEUP_ALL_LOW)
 
     if machine.wake_reason() is not machine.EXT0_WAKE:
+        machine.WDT(timeout=RUN_EVERY_MINUTES*50000)
         run()
+        machine.deepsleep(RUN_EVERY_MINUTES*60000)
 
     rescue()
