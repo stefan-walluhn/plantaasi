@@ -44,8 +44,10 @@ def setup_time():
 
 
 def setup_grafana(config):
-    log.info("setup Grafana")
+    if 'grafana' not in config:
+        return
 
+    log.info("setup Grafana")
     Grafana().login(**config['grafana'])
 
 
